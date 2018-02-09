@@ -36,10 +36,10 @@ class Game {
       .forEach((body) => body.remove())
   }
 
-  start () {
+  start (tickInterval) {
     this._ticker = setInterval(async () => {
       await this.tick()
-    }, TICK_INTERVAL)
+    }, tickInterval || TICK_INTERVAL)
   }
 
   addAlien () {
