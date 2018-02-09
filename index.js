@@ -4,5 +4,5 @@ module.exports = {
   start: (...args) => game.start(...args),
   join: (...args) => game.join(...args),
   update: (...args) => game.update(...args),
-  state: async (...args) => await game.getState(...args)
+  state: async (...args) => game.getState(...args)
 }
