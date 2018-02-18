@@ -39,7 +39,7 @@ class Body {
 
   get state () {
     const {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent} = this
-    return {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent: parent? parent.type: '', klass: this.constructor.name, inView: true}
+    return {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent: parent ? parent.type : '', klass: this.constructor.name, inView: true}
   }
 
   async tick () {
@@ -51,13 +51,13 @@ class Body {
   }
 
   async inCollisionWith (that) {
-    if (this !== that
-      && !this.shield
-      && !that.shield
-      && this !== that.parent
-      && this.parent !== that
-      && (!this.parent || this.parent !== that.parent)
-      && this.detectCollision(that)) {
+    if (this !== that &&
+      !this.shield &&
+      !that.shield &&
+      this !== that.parent &&
+      this.parent !== that &&
+      (!this.parent || this.parent !== that.parent) &&
+      this.detectCollision(that)) {
       if (this.onCollision) {
         await this.onCollision(that)
       }

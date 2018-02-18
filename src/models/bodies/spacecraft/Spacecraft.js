@@ -73,7 +73,6 @@ class Spacecraft extends Body {
     }
   }
 
-
   async destroy () {
     this.destroyed = true
     setTimeout(() => {
