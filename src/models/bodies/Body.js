@@ -4,6 +4,7 @@ const {MAX_SPEED, BOOST_SCALING} = require('../../constants/floating-objects')
 const {HEIGHT, WIDTH} = require('../../constants/viewport')
 
 const bodiesById = {}
+const bodies = []
 
 function randomInt (max) {
   return Math.floor(Math.random() * max)
@@ -30,7 +31,7 @@ class Body {
   }
 
   static get all () {
-    return Object.keys(bodiesById).map((id) => bodiesById[id])
+    return bodies
   }
 
   static get allActive () {
@@ -39,7 +40,7 @@ class Body {
 
   get state () {
     const {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent} = this
-    return {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent: parent ? parent.type : '', klass: this.constructor.name, inView: true}
+    return {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent: parent? parent.type: '', klass: this.constructor.name, inView: true}
   }
 
   async tick () {
@@ -51,13 +52,13 @@ class Body {
   }
 
   async inCollisionWith (that) {
-    if (this !== that &&
-      !this.shield &&
-      !that.shield &&
-      this !== that.parent &&
-      this.parent !== that &&
-      (!this.parent || this.parent !== that.parent) &&
-      this.detectCollision(that)) {
+    if (this !== that
+      && !this.shield
+      && !that.shield
+      && this !== that.parent
+      && this.parent !== that
+      && (!this.parent || this.parent !== that.parent)
+      && this.detectCollision(that)) {
       if (this.onCollision) {
         await this.onCollision(that)
       }
@@ -101,6 +102,7 @@ class Body {
     Object.assign(this, options)
     this.active = true
     bodiesById[this.id] = this
+    bodies.push(this)
     return this
   }
 
@@ -110,6 +112,10 @@ class Body {
   }
 
   remove () {
+    const index = bodies.indexOf(this);
+    if (index !== -1) {
+      bodies.splice(index, 1);
+    }
     delete bodiesById[this.id]
   }
 }
