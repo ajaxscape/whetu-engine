@@ -16,6 +16,7 @@ describe('Body', () => {
       assert.instanceOf(body, Body)
       assert.equal(Body.get(body.id), undefined)
       assert.empty(Body.all)
+      assert.isNotTrue(body.active)
     })
   })
 
@@ -25,6 +26,7 @@ describe('Body', () => {
       body.start()
       assert.equal(Body.get(body.id), body)
       assert.deepEqual(Body.all, [body])
+      assert.isTrue(body.active)
     })
   })
 
@@ -35,6 +37,17 @@ describe('Body', () => {
       body.remove()
       assert.equal(Body.get(body.id), undefined)
       assert.empty(Body.all)
+    })
+  })
+
+  describe('destroy', () => {
+    it('should destroy a body', () => {
+      const body = new Body()
+      body.start()
+      body.destroy()
+      assert.equal(Body.get(body.id), body)
+      assert.deepEqual(Body.all, [body])
+      assert.isNotTrue(body.active)
     })
   })
 })
