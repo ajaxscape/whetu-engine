@@ -8,6 +8,7 @@ describe('Body', () => {
       const body = Body.all[0]
       body.remove()
     }
+    assert.empty(Body.all)
   })
 
   describe('constructor', () => {
@@ -48,6 +49,31 @@ describe('Body', () => {
       assert.equal(Body.get(body.id), body)
       assert.deepEqual(Body.all, [body])
       assert.isNotTrue(body.active)
+    })
+  })
+
+  describe('allActive', () => {
+    it('should only return the active collection', () => {
+      const body = new Body()
+      assert.empty(Body.all)
+      assert.empty(Body.allActive)
+      body.start()
+      assert.deepEqual(Body.all, [body])
+      assert.deepEqual(Body.allActive, [body])
+      body.destroy()
+      assert.deepEqual(Body.all, [body])
+      assert.empty(Body.allActive)
+      body.remove()
+      assert.empty(Body.all)
+      assert.empty(Body.allActive)
+    })
+  })
+
+  describe('state', () => {
+    it('should return the current state', () => {
+      const body = new Body()
+      body.start()
+      assert.deepEqual(body.state, {})
     })
   })
 })
