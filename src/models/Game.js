@@ -25,9 +25,9 @@ class Game {
     )
 
     await Promise.all(Body.all
-      .filter((body) => !body.collision)
+      .filter(async (body) => !body.collision)
       .map(async (body) => Promise.all(Body.all
-        .map((other) => other.inCollisionWith(body))))
+        .map(async (other) => Promise.resolve(other.inCollisionWith(body)))))
     )
 
     // remove inactive objects

@@ -13,8 +13,7 @@ class AlienSpacecraft extends Spacecraft {
   }
 
   async tick () {
-    const players = Spacecraft.all
-      .filter((body) => body.player)
+    const players = Spacecraft.all.filter((body) => body.player && !body.shield)
     if (players.length) {
       const nearest = await Promise.resolve(players.reduce((nearest, player) => {
         const distanceToNearest = Vector.getLength(nearest.x - this.x, nearest.y - this.y)
