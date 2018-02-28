@@ -71,9 +71,23 @@ describe('Body', () => {
 
   describe('state', () => {
     it('should return the current state', () => {
-      const body = new Body()
+      const expectedState = {
+        active: true,
+        direction: 0,
+        id: '08a7713b-6d42-403c-940f-6aea67b24e60',
+        inView: true,
+        klass: 'Body',
+        maxSpeed: 18,
+        orientation: 0,
+        parent: '',
+        velocity: 0,
+        x: 14292,
+        y: 24492,
+      }
+      const {id, x, y} = expectedState
+      const body = new Body({id, x, y})
       body.start()
-      assert.deepEqual(body.state, {})
+      assert.deepEqual(body.state, expectedState)
     })
   })
 })

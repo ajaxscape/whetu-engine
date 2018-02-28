@@ -21,9 +21,9 @@ class Body {
   constructor (options = {}) {
     Object.assign(this, defaults, {
       x: randomInt(WIDTH),
-      y: randomInt(HEIGHT)
+      y: randomInt(HEIGHT),
+      id: uuid()
     }, options)
-    this.id = uuid()
   }
 
   static get (id) {
@@ -39,8 +39,7 @@ class Body {
   }
 
   get state () {
-    const {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent} = this
-    return {x, y, width, height, id, orientation, shield, afterBurner, collision, energy, score, destroyed, fire, type, parent: parent? parent.type: '', klass: this.constructor.name, inView: true}
+    return Object.assign({}, {parent: this.parent? this.parent.type: '', klass: this.constructor.name, inView: true}, this)
   }
 
   async tick () {
