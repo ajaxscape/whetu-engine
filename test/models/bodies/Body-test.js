@@ -1,5 +1,6 @@
 const assert = require('chai').assert
 const Body = require('../../../src/models/bodies/Body')
+class Descendant extends Body {}
 
 describe('Body', () => {
   afterEach(() => {
@@ -15,9 +16,19 @@ describe('Body', () => {
     it('should return a new Body', () => {
       const body = new Body()
       assert.instanceOf(body, Body)
+      assert.notInstanceOf(body, Descendant)
       assert.equal(Body.get(body.id), undefined)
       assert.empty(Body.all)
       assert.isNotTrue(body.active)
+    })
+
+    it('should return a new Descendant', () => {
+      const descendant = new Descendant()
+      assert.instanceOf(descendant, Body)
+      assert.instanceOf(descendant, Descendant)
+      assert.equal(Body.get(descendant.id), undefined)
+      assert.empty(Body.all)
+      assert.isNotTrue(descendant.active)
     })
   })
 
@@ -70,7 +81,7 @@ describe('Body', () => {
   })
 
   describe('state', () => {
-    it('should return the current state', () => {
+    it('should return the initial state', () => {
       const expectedState = {
         active: true,
         direction: 0,
