@@ -16,7 +16,7 @@ class Bolt extends Body {
   async start (options = {}) {
     await super.start(options)
     this.thrust(MAX_SPEED * 20)
-    this.timer = setTimeout(async () => await this.destroy(), MAX_BOLT_DURATION)
+    this.timer = setTimeout(() => this.destroy(), MAX_BOLT_DURATION)
     return this
   }
 

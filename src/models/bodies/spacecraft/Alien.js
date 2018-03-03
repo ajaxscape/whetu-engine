@@ -8,8 +8,8 @@ const defaults = {
 }
 
 const defaultPoint = {
-  x: 100,
-  y: 100
+  x: 0,
+  y: 0
 }
 
 class AlienSpacecraft extends Spacecraft {
