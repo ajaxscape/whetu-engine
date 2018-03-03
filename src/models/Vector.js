@@ -16,7 +16,7 @@ class Vector {
   }
 
   static getLength (dx, dy) {
-    return Math.sqrt(Math.abs((dx * dx) + (dy * dy)))
+    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
   }
 }
 

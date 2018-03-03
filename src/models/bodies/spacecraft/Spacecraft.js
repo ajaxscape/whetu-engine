@@ -19,7 +19,6 @@ function randomInt (max) {
 class Spacecraft extends Body {
   constructor (options) {
     super(Object.assign({}, defaults, options))
-    this.lastBolt = Date.now() - DELAY_BETWEEN_BOLTS
   }
 
   async tick (...args) {
@@ -55,7 +54,7 @@ class Spacecraft extends Body {
 
   async fireBolt () {
     // ToDo Think this through
-    if (!this.shield && this.lastBolt < Date.now() - DELAY_BETWEEN_BOLTS) {
+    if (!this.shield && (!this.lastBolt || this.lastBolt < Date.now() - DELAY_BETWEEN_BOLTS)) {
       this.lastBolt = Date.now()
       const {x, y, velocity, direction, orientation} = this
       const origin = Vector.getVector(orientation, (this.width + this.maxSpeed) / 2)
