@@ -91,7 +91,12 @@ class Game {
     }))
     return data
       .filter((state) => state)
-      .map((state) => Object.assign(state, {x: Math.round(state.x), y: Math.round(state.y)}))
+      .map((state) => {
+        const {x, y} = state
+        state.x = Math.round(x)
+        state.y = Math.round(y)
+        return state
+      })
   }
 }
 
