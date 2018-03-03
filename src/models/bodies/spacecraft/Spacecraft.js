@@ -80,7 +80,7 @@ class Spacecraft extends Body {
       this.y = randomInt(HEIGHT / 2)
       this.collision = false
       this.destroyed = false
-    }, 2500)
+    }, 500)
     return this
   }
 }

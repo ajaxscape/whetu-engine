@@ -73,30 +73,22 @@ class Game {
     const {width, height} = viewport
     const offsetX = (width / 2) - x
     const offsetY = (height / 2) - y
-    const isInView = body.x + offsetX > 0 && body.x + offsetX < width && body.y + offsetY > 0 && body.y + offsetY < height
-    return isInView
+    return body.x + offsetX > 0 && body.x + offsetX < width && body.y + offsetY > 0 && body.y + offsetY < height
   }
 
   async getState (playerId, viewport = {width: 1000, height: 1000}, radar = {width: 100000, height: 100000}) {
     const data = await Promise.all(Body.all.map(async (body) => {
-      const {id, x, y, type, klass} = body.state
-      let state
       if (this.within(playerId, body, radar)) {
         if (!this.within(playerId, body, viewport)) {
-          state = {id, x, y, type, klass}
+          const {id, type, klass, x, y} = body.state
+          return {id, type, klass, x, y}
+        } else {
+          return body.state
         }
-        state = body.state
       }
-      return state
     }))
     return data
       .filter((state) => state)
-      .map((state) => {
-        const {x, y} = state
-        state.x = Math.round(x)
-        state.y = Math.round(y)
-        return state
-      })
   }
 }
 

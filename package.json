@@ -1,6 +1,6 @@
 {
   "name": "whetu-engine",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "An Experimental Game Engine",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,8 @@
   "standard": {
     "globals": [
       "describe",
+      "afterEach",
+      "beforeEach",
       "it"
     ]
   },

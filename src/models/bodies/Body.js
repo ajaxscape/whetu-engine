@@ -39,7 +39,8 @@ class Body {
   }
 
   get state () {
-    return Object.assign({}, {parent: this.parent? this.parent.type: '', klass: this.constructor.name, inView: true}, this)
+    const {parent, constructor: {name: klass}, x, y, inView = true} = this
+    return Object.assign({}, this, {parent: parent ? parent.type : '', klass, inView, x: Math.round(x), y: Math.round(y)})
   }
 
   async tick () {
@@ -51,13 +52,13 @@ class Body {
   }
 
   async inCollisionWith (that) {
-    if (this !== that
-      && !this.shield
-      && !that.shield
-      && this !== that.parent
-      && this.parent !== that
-      && (!this.parent || this.parent !== that.parent)
-      && this.detectCollision(that)) {
+    if (this !== that &&
+      !this.shield &&
+      !that.shield &&
+      this !== that.parent &&
+      this.parent !== that &&
+      (!this.parent || this.parent !== that.parent) &&
+      this.detectCollision(that)) {
       if (this.onCollision) {
         await this.onCollision(that)
       }
@@ -111,9 +112,9 @@ class Body {
   }
 
   remove () {
-    const index = bodies.indexOf(this);
+    const index = bodies.indexOf(this)
     if (index !== -1) {
-      bodies.splice(index, 1);
+      bodies.splice(index, 1)
     }
     delete bodiesById[this.id]
   }

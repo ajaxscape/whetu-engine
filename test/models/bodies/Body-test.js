@@ -93,7 +93,7 @@ describe('Body', () => {
         parent: '',
         velocity: 0,
         x: 14292,
-        y: 24492,
+        y: 24492
       }
       const {id, x, y} = expectedState
       const body = new Body({id, x, y})
