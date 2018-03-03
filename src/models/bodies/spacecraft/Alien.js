@@ -42,7 +42,7 @@ class AlienSpacecraft extends Spacecraft {
           const distance = Vector.getLength(x - this.x, y - this.y)
           if (distance < nearest.distance) {
             const angle = Vector.getAngle(x - this.x, this.y - y)
-            return {x, y, distance, angle}
+            return {x, y, distance, angle, player}
           } else {
             const {x, y} = nearest
             const distance = Vector.getLength(x - this.x, y - this.y)
@@ -59,7 +59,7 @@ class AlienSpacecraft extends Spacecraft {
   }
 
   async tick () {
-    const {distance, angle, angleDifference} = await this.nearestPlayer
+    const {distance, angle, angleDifference} = await this.nearestPlayer()
     const chance = this.shield ? 100 : 500
     if (!Math.floor(Math.random() * chance)) {
       this.toggleShield()

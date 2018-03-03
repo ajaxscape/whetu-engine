@@ -1,6 +1,6 @@
 {
   "name": "whetu-engine",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "An Experimental Game Engine",
   "main": "index.js",
   "scripts": {
