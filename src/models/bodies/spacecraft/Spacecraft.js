@@ -61,7 +61,7 @@ class Spacecraft extends Body {
       const origin = Vector.getVector(orientation, (this.width + this.maxSpeed) / 2)
       const bolt = new Bolt({parent: this})
       await bolt.start({origin: this, x: x + origin.x, y: y - origin.y, velocity, direction, orientation})
-      setTimeout(async () => await bolt.destroy(), MAX_BOLT_DURATION)
+      setTimeout(async () => bolt.destroy(), MAX_BOLT_DURATION)
     }
     return this
   }
@@ -80,7 +80,7 @@ class Spacecraft extends Body {
       this.y = randomInt(HEIGHT / 2)
       this.collision = false
       this.destroyed = false
-    }, 250)
+    }, 2500)
     return this
   }
 }
