@@ -2,7 +2,7 @@ const Body = require('./bodies/Body')
 const AlienSpacecraft = require('./bodies/spacecraft/Alien')
 const PlayersSpacecraft = require('./bodies/spacecraft/Player')
 const Meteor = require('./bodies/Meteor')
-const {MAX_REMOTE_ALIENS, MAX_METEORS, TICK_INTERVAL} = require('../constants/floating-objects')
+const {MAX_REMOTE_ALIENS, TICK_INTERVAL} = require('../constants/floating-objects')
 
 const defaults = {}
 
@@ -87,9 +87,11 @@ class Game {
         }
         state = body.state
       }
-      return Promise.resolve(state)
+      return state
     }))
-    return data.filter((state) => state)
+    return data
+      .filter((state) => state)
+      .map((state) => Object.assign(state, {x: Math.round(state.x), y: Math.round(state.y)}))
   }
 }
 
