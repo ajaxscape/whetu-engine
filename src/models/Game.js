@@ -36,16 +36,17 @@ class Game {
       .forEach((body) => body.remove())
   }
 
-  start (tickInterval) {
+  start (gameData = {}) {
+    this.gameData = gameData
     this._ticker = setInterval(async () => {
       await this.tick()
-    }, tickInterval || TICK_INTERVAL)
+    }, gameData.tickInterval || TICK_INTERVAL)
   }
 
   addAlien () {
-    const alien = new AlienSpacecraft({
-      type: Body.all.length % 2 ? 'typical' : 'spooky'
-    })
+    const {alienTypes = ['spooky', 'creepy', 'ghostly', 'eerie']} = this
+    const type = alienTypes[Body.all.length % alienTypes.length]
+    const alien = new AlienSpacecraft({type})
     alien.start()
   }
 
