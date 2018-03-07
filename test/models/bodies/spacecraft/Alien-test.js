@@ -155,14 +155,14 @@ describe('Alien', () => {
       const body = new Alien(alienData)
       body.start()
       const nearest = await body.nearestPlayer()
-      assert.deepEqual(nearest, {distance, angle, angleDifference})
+      assert.deepEqual(nearest, {id: playerData.id, distance, angle, angleDifference})
     })
   })
 
   describe('nearest', () => {
     it('should return nearest player', async () => {
       const {x, y} = defaultPoint
-      const playerData = {
+      const player1Data = {
         id: 'PLAYER_ID',
         x,
         y
@@ -172,24 +172,34 @@ describe('Alien', () => {
         x: 800,
         y: 800
       }
+      const player3Data = {
+        id: 'PLAYER3_ID',
+        x: 1200,
+        y: 1200
+      }
+      const player4Data = {
+        id: 'PLAYER4_ID',
+        x: 600,
+        y: 600
+      }
       const alienData = {
         id: 'ALIEN_ID',
         x: 200,
         y: 200
       }
-      const dx = playerData.x - alienData.x
-      const dy = playerData.y - alienData.y
+      const dx = player1Data.x - alien1Data.x
+      const dy = player1Data.y - alien1Data.y
       const distance = Vector.getLength(dx, dy)
       const angle = Vector.getAngle(dx, -dy)
       const angleDifference = angle
-      const player = new Player(playerData)
+      const player = new Player(player1Data)
       const player2 = new Player(player2Data)
-      const body = new Alien(alienData)
       player.start()
+      const body = new Alien(alienData)
       player2.start()
       body.start()
       const nearest = await body.nearestPlayer()
-      assert.deepEqual(nearest, {distance, angle, angleDifference})
+      assert.deepEqual(nearest, {id: player4Data.id, distance, angle, angleDifference})
     })
   })
 })

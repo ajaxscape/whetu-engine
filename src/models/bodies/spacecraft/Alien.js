@@ -33,28 +33,31 @@ class AlienSpacecraft extends Spacecraft {
         const {x, y} = player
         const distance = Vector.getLength(x - this.x, y - this.y)
         const angle = Vector.getAngle(x - this.x, this.y - y)
-        nearest = {distance, angle}
+        nearest = {id: player.id, distance, angle}
         break
       }
       default: {
         nearest = players.reduce((nearest, player) => {
-          const {x, y} = player
+          const {id, x, y} = player
           const distance = Vector.getLength(x - this.x, y - this.y)
           if (distance < nearest.distance) {
             const angle = Vector.getAngle(x - this.x, this.y - y)
-            return {x, y, distance, angle, player}
+            return {id, x, y, distance, angle, player}
           } else {
-            const {x, y} = nearest
+            const {id, x, y} = nearest
             const distance = Vector.getLength(x - this.x, y - this.y)
             const angle = Vector.getAngle(x - this.x, this.y - y)
-            return {x, y, distance, angle}
+            return {id, x, y, distance, angle}
           }
         })
         break
       }
     }
-    const {distance, angle} = nearest
+    const {id, distance, angle} = nearest
     const angleDifference = this.angleDifference(angle)
+    if (id) {
+      return {id, distance, angle, angleDifference}
+    }
     return {distance, angle, angleDifference}
   }
 
