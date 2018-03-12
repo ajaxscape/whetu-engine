@@ -3,7 +3,9 @@ const Vector = require('../../../../src/models/Vector')
 const Body = require('../../../../src/models/bodies/Body')
 const Alien = require('../../../../src/models/bodies/spacecraft/Alien')
 const Player = require('../../../../src/models/bodies/spacecraft/Player')
+
 class Descendant extends Alien {}
+
 const defaultPoint = {x: 100, y: 100}
 
 describe('Alien', () => {
@@ -113,6 +115,40 @@ describe('Alien', () => {
   })
 
   describe('nearest', () => {
+    const getPositions = (distances) => {
+      distances.map((distance) => {
+        const x = Math.floor(Math.random() * distance)
+        const y = Math.sqrt(distance) - Math.sqrt(x)
+        return {x, y}
+      })
+    }
+  })
+
+  describe('nearest prev', () => {
+    const distances = [200, 250, 500, 750, 900]
+    const playerList = [
+      {id: 'PLAYER_1_ID', x: 1000, y: 1000},
+      {id: 'PLAYER_2_ID', x: 500, y: 500},
+      {id: 'PLAYER_3_ID', x: 2000, y: 2000},
+      {id: 'PLAYER_4_ID', x: 1500, y: 1500},
+      {id: 'PLAYER_5_ID', x: 3000, y: 3000},
+      {id: 'PLAYER_6_ID', x: 1000, y: 500},
+      {id: 'PLAYER_7_ID', x: 500, y: 1000},
+      {id: 'PLAYER_8_ID', x: 2000, y: 500},
+      {id: 'PLAYER_9_ID', x: 500, y: 2000},
+      {id: 'PLAYER_10_ID', x: 10000, y: 5000},
+      {id: 'PLAYER_11_ID', x: 6000, y: 4000},
+      {id: 'PLAYER_12_ID', x: 2000, y: 500},
+      {id: 'PLAYER_13_ID', x: 700, y: 1200}
+    ]
+
+    let players
+
+    beforeEach(() => {
+      players = [...playerList] // Make a copy of the list
+      // todo remember it inject the alien and test for where it appears in the list order ... maybe sort list first
+    })
+
     it('should return default nearest', async () => {
       const {x, y} = defaultPoint
       const alienData = {
@@ -130,9 +166,7 @@ describe('Alien', () => {
       const nearest = await body.nearestPlayer()
       assert.deepEqual(nearest, {distance, angle, angleDifference})
     })
-  })
 
-  describe('nearest', () => {
     it('should return only player', async () => {
       const {x, y} = defaultPoint
       const playerData = {
@@ -157,9 +191,7 @@ describe('Alien', () => {
       const nearest = await body.nearestPlayer()
       assert.deepEqual(nearest, {id: playerData.id, distance, angle, angleDifference})
     })
-  })
 
-  describe('nearest', () => {
     it('should return nearest player', async () => {
       const {x, y} = defaultPoint
       const player1Data = {
