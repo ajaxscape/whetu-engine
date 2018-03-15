@@ -115,123 +115,148 @@ describe('Alien', () => {
   })
 
   describe('nearest', () => {
-    const getPositions = (distances) => {
-      distances.map((distance) => {
-        const x = Math.floor(Math.random() * distance)
-        const y = Math.sqrt(distance) - Math.sqrt(x)
-        return {x, y}
-      })
-    }
-  })
-
-  describe('nearest prev', () => {
-    const distances = [200, 250, 500, 750, 900]
-    const playerList = [
-      {id: 'PLAYER_1_ID', x: 1000, y: 1000},
-      {id: 'PLAYER_2_ID', x: 500, y: 500},
-      {id: 'PLAYER_3_ID', x: 2000, y: 2000},
-      {id: 'PLAYER_4_ID', x: 1500, y: 1500},
-      {id: 'PLAYER_5_ID', x: 3000, y: 3000},
-      {id: 'PLAYER_6_ID', x: 1000, y: 500},
-      {id: 'PLAYER_7_ID', x: 500, y: 1000},
-      {id: 'PLAYER_8_ID', x: 2000, y: 500},
-      {id: 'PLAYER_9_ID', x: 500, y: 2000},
-      {id: 'PLAYER_10_ID', x: 10000, y: 5000},
-      {id: 'PLAYER_11_ID', x: 6000, y: 4000},
-      {id: 'PLAYER_12_ID', x: 2000, y: 500},
-      {id: 'PLAYER_13_ID', x: 700, y: 1200}
-    ]
-
-    let players
-
-    beforeEach(() => {
-      players = [...playerList] // Make a copy of the list
-      // todo remember it inject the alien and test for where it appears in the list order ... maybe sort list first
+    const getPositions = (distances, point = {x: 0, y: 0}) => distances.map((distance) => {
+      const x = (Math.floor(Math.random() * distance)) + point.x
+      const y = (Math.sqrt(distance) - Math.sqrt(x)) + point.y
+      return {x, y}
     })
 
     it('should return default nearest', async () => {
-      const {x, y} = defaultPoint
-      const alienData = {
-        id: 'ALIEN_ID',
-        x: 200,
-        y: 200
-      }
-      const dx = x - alienData.x
-      const dy = y - alienData.y
-      const distance = Vector.getLength(dx, dy)
-      const angle = Vector.getAngle(dx, -dy)
-      const angleDifference = angle
-      const body = new Alien(alienData)
-      body.start()
-      const nearest = await body.nearestPlayer()
-      assert.deepEqual(nearest, {distance, angle, angleDifference})
+      const point = {x: 30, y: 40}
+      const distances = []
+      getPositions(distances, point)
+        .map(({x, y}, index) => new Player({id: `PLAYER_${index.toString()}`, x, y}))
+        .forEach((player) => player.start())
+      const alien = new Alien(point)
+      alien.start()
+      const player = await alien.nearestPlayer()
+      const {x, y} = point
+      assert.equal(player.distance, Math.sqrt((x * x) + (y * y)))
     })
 
-    it('should return only player', async () => {
-      const {x, y} = defaultPoint
-      const playerData = {
-        id: 'PLAYER_ID',
-        x,
-        y
-      }
-      const alienData = {
-        id: 'ALIEN_ID',
-        x: 200,
-        y: 200
-      }
-      const dx = playerData.x - alienData.x
-      const dy = playerData.y - alienData.y
-      const distance = Vector.getLength(dx, dy)
-      const angle = Vector.getAngle(dx, -dy)
-      const angleDifference = angle
-      const player = new Player(playerData)
-      player.start()
-      const body = new Alien(alienData)
-      body.start()
-      const nearest = await body.nearestPlayer()
-      assert.deepEqual(nearest, {id: playerData.id, distance, angle, angleDifference})
-    })
-
-    it('should return nearest player', async () => {
-      const {x, y} = defaultPoint
-      const player1Data = {
-        id: 'PLAYER_ID',
-        x,
-        y
-      }
-      const player2Data = {
-        id: 'PLAYER2_ID',
-        x: 800,
-        y: 800
-      }
-      const player3Data = {
-        id: 'PLAYER3_ID',
-        x: 1200,
-        y: 1200
-      }
-      const player4Data = {
-        id: 'PLAYER4_ID',
-        x: 600,
-        y: 600
-      }
-      const alienData = {
-        id: 'ALIEN_ID',
-        x: 200,
-        y: 200
-      }
-      const dx = player1Data.x - alien1Data.x
-      const dy = player1Data.y - alien1Data.y
-      const distance = Vector.getLength(dx, dy)
-      const angle = Vector.getAngle(dx, -dy)
-      const angleDifference = angle
-      const player = new Player(player1Data)
-      const player2 = new Player(player2Data)
-      player.start()
-      const body = new Alien(alienData)
-      player2.start()
-      body.start()
-      const nearest = await body.nearestPlayer()
-      assert.deepEqual(nearest, {id: player4Data.id, distance, angle, angleDifference})
+    it('should return default nearest', async () => {
+      const point = {x: 30, y: 40}
+      const distances = [1000, 5000, 10000, 2000, 7000, 9000, 100000, 2500]
+      getPositions(distances, point)
+        .map(({x, y}, index) => new Player({id: `PLAYER_${index.toString()}`, x, y}))
+        .forEach((player) => player.start())
+      const alien = new Alien(point)
+      alien.start()
+      const player = await alien.nearestPlayer()
+      const {x, y} = point
+      assert.equal(player.distance, distances[0])
+      assert.equal(player.id, 'PLAYER_0')
     })
   })
+
+  // describe('nearest prev', () => {
+  //   const distances = [200, 250, 500, 750, 900]
+  //   const playerList = [
+  //     {id: 'PLAYER_1_ID', x: 1000, y: 1000},
+  //     {id: 'PLAYER_2_ID', x: 500, y: 500},
+  //     {id: 'PLAYER_3_ID', x: 2000, y: 2000},
+  //     {id: 'PLAYER_4_ID', x: 1500, y: 1500},
+  //     {id: 'PLAYER_5_ID', x: 3000, y: 3000},
+  //     {id: 'PLAYER_6_ID', x: 1000, y: 500},
+  //     {id: 'PLAYER_7_ID', x: 500, y: 1000},
+  //     {id: 'PLAYER_8_ID', x: 2000, y: 500},
+  //     {id: 'PLAYER_9_ID', x: 500, y: 2000},
+  //     {id: 'PLAYER_10_ID', x: 10000, y: 5000},
+  //     {id: 'PLAYER_11_ID', x: 6000, y: 4000},
+  //     {id: 'PLAYER_12_ID', x: 2000, y: 500},
+  //     {id: 'PLAYER_13_ID', x: 700, y: 1200}
+  //   ]
+  //
+  //   let players
+  //
+  //   beforeEach(() => {
+  //     players = [...playerList] // Make a copy of the list
+  //     // todo remember it inject the alien and test for where it appears in the list order ... maybe sort list first
+  //   })
+  //
+  //   it('should return default nearest', async () => {
+  //     const {x, y} = defaultPoint
+  //     const alienData = {
+  //       id: 'ALIEN_ID',
+  //       x: 200,
+  //       y: 200
+  //     }
+  //     const dx = x - alienData.x
+  //     const dy = y - alienData.y
+  //     const distance = Vector.getLength(dx, dy)
+  //     const angle = Vector.getAngle(dx, -dy)
+  //     const angleDifference = angle
+  //     const body = new Alien(alienData)
+  //     body.start()
+  //     const nearest = await body.nearestPlayer()
+  //     assert.deepEqual(nearest, {distance, angle, angleDifference})
+  //   })
+  //
+  //   it('should return only player', async () => {
+  //     const {x, y} = defaultPoint
+  //     const playerData = {
+  //       id: 'PLAYER_ID',
+  //       x,
+  //       y
+  //     }
+  //     const alienData = {
+  //       id: 'ALIEN_ID',
+  //       x: 200,
+  //       y: 200
+  //     }
+  //     const dx = playerData.x - alienData.x
+  //     const dy = playerData.y - alienData.y
+  //     const distance = Vector.getLength(dx, dy)
+  //     const angle = Vector.getAngle(dx, -dy)
+  //     const angleDifference = angle
+  //     const player = new Player(playerData)
+  //     player.start()
+  //     const body = new Alien(alienData)
+  //     body.start()
+  //     const nearest = await body.nearestPlayer()
+  //     assert.deepEqual(nearest, {id: playerData.id, distance, angle, angleDifference})
+  //   })
+  //
+  //   it('should return nearest player', async () => {
+  //     const {x, y} = defaultPoint
+  //     const player1Data = {
+  //       id: 'PLAYER_ID',
+  //       x,
+  //       y
+  //     }
+  //     const player2Data = {
+  //       id: 'PLAYER2_ID',
+  //       x: 800,
+  //       y: 800
+  //     }
+  //     const player3Data = {
+  //       id: 'PLAYER3_ID',
+  //       x: 1200,
+  //       y: 1200
+  //     }
+  //     const player4Data = {
+  //       id: 'PLAYER4_ID',
+  //       x: 600,
+  //       y: 600
+  //     }
+  //     const alienData = {
+  //       id: 'ALIEN_ID',
+  //       x: 200,
+  //       y: 200
+  //     }
+  //     const dx = player1Data.x - alien1Data.x
+  //     const dy = player1Data.y - alien1Data.y
+  //     const distance = Vector.getLength(dx, dy)
+  //     const angle = Vector.getAngle(dx, -dy)
+  //     const angleDifference = angle
+  //     const player = new Player(player1Data)
+  //     const player2 = new Player(player2Data)
+  //     player.start()
+  //     const body = new Alien(alienData)
+  //     player2.start()
+  //     body.start()
+  //     const nearest = await body.nearestPlayer()
+  //     assert.deepEqual(nearest, {id: player4Data.id, distance, angle, angleDifference})
+  //   })
+  // })
 })

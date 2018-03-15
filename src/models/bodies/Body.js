@@ -51,6 +51,14 @@ class Body {
     this.y -= drift.y
   }
 
+  distanceTo ({x, y}) {
+    return Vector.getLength(x - this.x, y - this.y)
+  }
+
+  directionTo ({x, y}) {
+    return Vector.getAngle(x - this.x, y - this.y)
+  }
+
   async inCollisionWith (that) {
     if (this !== that &&
       !this.shield &&

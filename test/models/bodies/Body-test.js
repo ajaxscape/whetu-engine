@@ -1,5 +1,6 @@
 const assert = require('chai').assert
 const Body = require('../../../src/models/bodies/Body')
+
 class Descendant extends Body {}
 
 describe('Body', () => {
@@ -100,5 +101,28 @@ describe('Body', () => {
       body.start()
       assert.deepEqual(body.state, expectedState)
     })
+  })
+
+  describe('distanceTo', () => {
+    const distances = [4, 8, 16, 32, 64, 128, 256, 512]
+    const getPositions = (distances, point = {x: 0, y: 0}) => distances.map((distance) => {
+      const dx = (Math.random() * distance)
+      const dy = (Math.sqrt(distance * distance - dx * dx))
+      return {x: dx + point.x, y: dy + point.y}
+    })
+    const points = [{x: 100, y: 100}, {x: 10001, y: 2929}, {x: 0.555, y: 10}]
+    points.forEach((point, index) => {
+        describe(`should return correct distance between ${point.x}, ${point.y} and`, () => {
+          const body = new Body(point)
+          const points = getPositions(distances, point)
+          points.forEach((target, index) => {
+            it(`${target.x}, ${target.y} being ${distances[index]}`, () => {
+              const distance = Math.round(body.distanceTo(target))
+              assert.equal(distance, distances[index])
+            })
+          })
+        })
+      }
+    )
   })
 })
