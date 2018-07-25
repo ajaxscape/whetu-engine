@@ -23,37 +23,35 @@ class AlienSpacecraft extends Spacecraft {
     switch (players.length) {
       case 0: {
         const {x, y} = defaultPoint
-        const distance = Vector.getLength(x - this.x, y - this.y)
-        const angle = Vector.getAngle(x - this.x, this.y - y)
-        nearest = {distance, angle}
+        const distance = this.distanceTo(defaultPoint)
+        nearest = {distance, x, y}
         break
       }
       case 1: {
         const player = players[0]
-        const {x, y} = player
-        const distance = Vector.getLength(x - this.x, y - this.y)
-        const angle = Vector.getAngle(x - this.x, this.y - y)
-        nearest = {id: player.id, distance, angle}
+        const {id, x, y} = player
+        const distance = this.distanceTo(player)
+        nearest = {id, distance, x, y}
         break
       }
       default: {
-        nearest = players.reduce((nearest, player) => {
-          const {id, x, y} = player
-          const distance = Vector.getLength(x - this.x, y - this.y)
-          if (distance < nearest.distance) {
-            const angle = Vector.getAngle(x - this.x, this.y - y)
-            return {id, x, y, distance, angle, player}
+        const distances = players.map(({id, x, y}) => {
+          const distance = this.distanceTo({x, y})
+          return {distance, id, x, y}
+        })
+        nearest = distances.reduce((nearest, player) => {
+          if (player.distance < nearest.distance) {
+            return player
           } else {
-            const {id, x, y} = nearest
-            const distance = Vector.getLength(x - this.x, y - this.y)
-            const angle = Vector.getAngle(x - this.x, this.y - y)
-            return {id, x, y, distance, angle}
+            return nearest
           }
         })
         break
       }
     }
-    const {id, distance, angle} = nearest
+
+    const angle = this.directionTo(nearest)
+    const {id, distance} = nearest
     const angleDifference = this.angleDifference(angle)
     if (id) {
       return {id, distance, angle, angleDifference}

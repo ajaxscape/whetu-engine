@@ -55,8 +55,8 @@ class Game {
     meteor.start()
   }
 
-  join (user = {username: 'anon'}) {
-    const player = new PlayersSpacecraft()
+  join (options) {
+    const player = new PlayersSpacecraft(Object.assign({username: 'anon'}, options))
     player.start()
     return player.state
   }

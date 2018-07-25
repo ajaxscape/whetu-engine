@@ -7,6 +7,26 @@ const Player = require('../../../../src/models/bodies/spacecraft/Player')
 class Descendant extends Alien {}
 
 const defaultPoint = {x: 100, y: 100}
+function shuffle(array) {
+  let currentIndex = array.length
+  let temporaryValue
+  let randomIndex
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
+  }
+
+  return array;
+}
 
 describe('Alien', () => {
   afterEach(() => {
@@ -117,12 +137,12 @@ describe('Alien', () => {
   describe('nearest', () => {
     const getPositions = (distances, point = {x: 0, y: 0}) => distances.map((distance) => {
       const x = (Math.floor(Math.random() * distance)) + point.x
-      const y = (Math.sqrt(distance) - Math.sqrt(x)) + point.y
+      const y = (Math.ceil(Math.sqrt(Math.abs((distance * distance) - (x * x))))) + point.y
       return {x, y}
     })
 
     it('should return default nearest', async () => {
-      const point = {x: 30, y: 40}
+      const point = {x: 0, y: 0}
       const distances = []
       getPositions(distances, point)
         .map(({x, y}, index) => new Player({id: `PLAYER_${index.toString()}`, x, y}))
@@ -134,18 +154,19 @@ describe('Alien', () => {
       assert.equal(player.distance, Math.sqrt((x * x) + (y * y)))
     })
 
-    it('should return default nearest', async () => {
-      const point = {x: 30, y: 40}
-      const distances = [1000, 5000, 10000, 2000, 7000, 9000, 100000, 2500]
-      getPositions(distances, point)
-        .map(({x, y}, index) => new Player({id: `PLAYER_${index.toString()}`, x, y}))
-        .forEach((player) => player.start())
+    it('should return nearest player', async () => {
+      const point = {x: 1000, y: -12345}
+      const distances = shuffle([10000, 5000, 1000, 2000, 7000, 9000, 100000, 2500])
+      const index = distances.indexOf(distances.reduce((prev, current) => prev < current ? prev : current))
+      const positions = getPositions(distances, point)
+      const players = positions.map(({x, y}, index) => new Player({id: `PLAYER_${index.toString()}`, x, y}))
+      players.forEach((player) => player.start())
       const alien = new Alien(point)
       alien.start()
       const player = await alien.nearestPlayer()
       const {x, y} = point
-      assert.equal(player.distance, distances[0])
-      assert.equal(player.id, 'PLAYER_0')
+      // assert.equal(player.id, `PLAYER_${index}`)
+      assert.equal(Math.floor(player.distance), distances[index])
     })
   })
 
