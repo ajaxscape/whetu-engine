@@ -38,7 +38,7 @@ describe('engine', () => {
       y: 1823
     }
 
-    fakeState = {}
+    fakeState = []
 
     engine.start()
   })
@@ -54,10 +54,11 @@ describe('engine', () => {
   describe('state', () => {
     it('should start a new Game', async () => {
       const {id, x, y} = fakePlayer
-      const player = await engine.join({id, x, y})
+      await engine.join({id, x, y})
       const update = await engine.update({id, viewport: fakeViewport, radar: fakeRadar})
-      const state = await engine.state()
-      assert.deepEqual(state, fakeState)
+      const state = await engine.state(id)
+      const playerState = state.filter((body) => body.id === id).pop()
+      assert.deepEqual(playerState, fakePlayer)
     })
   })
 })
